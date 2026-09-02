@@ -1,0 +1,7 @@
+[Unit]
+Description=Rack panel fast collectors
+
+[Service]
+Type=oneshot
+User=sean
+ExecStart=/home/sean/stack/panel/collect/fast.sh
