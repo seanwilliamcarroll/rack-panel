@@ -76,12 +76,12 @@ body {
   display: flex;
   align-items: baseline;
   gap: 12px;
-  margin-bottom: 4px;
+  margin-bottom: 2px;
 }
 .wan-label {
   color: var(--dim);
-  font-size: 28px;
+  font-size: 26px;
   width: 24px;
   flex: 0 0 auto;
 }
-#wan .big { font-size: 40px; }
+#wan .big { font-size: 34px; }

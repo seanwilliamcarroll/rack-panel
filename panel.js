@@ -111,6 +111,30 @@ function bps(n) {
   return n + ' b/s';
 }
 
+/**
+ * Draw a sparkline into an existing <polyline>.
+ *   id       — element id
+ *   values   — array of numbers, oldest first
+ *   max      — optional shared vertical scale; defaults to the series peak
+ *   capacity — optional horizontal capacity. When the buffer is not yet full,
+ *              the line right-aligns into this window instead of stretching
+ *              a few points across the whole tile.
+ */
+function spark(id, values, max, capacity) {
+  const el = document.getElementById(id);
+  if (!values || values.length < 2) { el.setAttribute('points', ''); return; }
+
+  const m = max || Math.max(...values, 1);
+  const n = Math.max(capacity || values.length, 2);
+  const offset = n - values.length;
+
+  const pts = values.map((v, i) =>
+    ((i + offset) / (n - 1) * 100) + ',' + (30 - v / m * 28)
+  ).join(' ');
+
+  el.setAttribute('points', pts);
+}
+
 async function wan() {
   try {
     const r = await fetch('/data/wan.json');
@@ -118,6 +142,13 @@ async function wan() {
 
     document.getElementById('wan-rx').textContent = bps(d.rx_bps);
     document.getElementById('wan-tx').textContent = bps(d.tx_bps);
+
+    // One shared scale, or up and down each normalise to their own peak and
+    // comparing them becomes meaningless. The floor stops an idle network's
+    // background chatter being magnified into a mountain range.
+    const scale = Math.max(...d.rx_hist, ...d.tx_hist, CONFIG.wanSparkFloor);
+    spark('wan-rx-line', d.rx_hist, scale, CONFIG.wanHistoryPoints);
+    spark('wan-tx-line', d.tx_hist, scale, CONFIG.wanHistoryPoints);
 
     const ageSec = Math.round(Date.now() / 1000 - d.ts);
     document.getElementById('wan-age').textContent = ageSec + 's ago';
