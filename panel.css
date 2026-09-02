@@ -42,3 +42,46 @@ body {
 .sub { color: var(--dim); margin-top: 8px; }
 .age { margin-top: auto; font-size: 14px; color: var(--dim); }
 .stale { opacity: 0.4; }
+
+#host-list { list-style: none; }
+#host-list li {
+  display: flex;
+  align-items: center;
+  padding: 5px 0;
+}
+#host-list li::before {
+  content: '';
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 10px;
+  background: var(--dim);
+  flex: 0 0 auto;
+}
+#host-list li.s1::before { background: var(--ok); }
+#host-list li.s0::before { background: var(--bad); }
+#host-list li.s2::before { background: var(--warn); }
+#host-list li .ms {
+  margin-left: auto;
+  color: var(--dim);
+  font-size: 15px;
+}
+#host-list li .u24 {
+  margin-left: 8px;
+  color: var(--warn);
+  font-size: 15px;
+}
+
+.wan-row {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+.wan-label {
+  color: var(--dim);
+  font-size: 28px;
+  width: 24px;
+  flex: 0 0 auto;
+}
+#wan .big { font-size: 40px; }

@@ -1,0 +1,9 @@
+[Unit]
+Description=Run rack panel slow collectors
+
+[Timer]
+OnBootSec=30s
+OnUnitActiveSec=5min
+
+[Install]
+WantedBy=timers.target

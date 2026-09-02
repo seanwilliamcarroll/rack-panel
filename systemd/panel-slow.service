@@ -1,0 +1,7 @@
+[Unit]
+Description=Rack panel slow collectors
+
+[Service]
+Type=oneshot
+User=sean
+ExecStart=/home/sean/rack-panel/collect/run-slow.sh

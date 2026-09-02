@@ -59,3 +59,74 @@ async function vitals() {
 
 vitals();
 setInterval(vitals, 30 * 1000);
+
+
+async function hosts() {
+  try {
+    const r = await fetch('/data/hosts.json');
+    const d = await r.json();
+
+    const ul = document.getElementById('host-list');
+    ul.innerHTML = '';
+
+    for (const h of d.hosts) {
+      const li = document.createElement('li');
+      li.className = 's' + h.status;
+      li.textContent = h.name;
+
+      if (h.ms != null) {
+        const ms = document.createElement('span');
+        ms.className = 'ms';
+        ms.textContent = h.ms + 'ms';
+        li.appendChild(ms);
+      }
+
+      // Only show uptime when it is not perfect — a column of 100% is noise.
+      if (h.up24 != null && h.up24 < 0.9999) {
+        const u = document.createElement('span');
+        u.className = 'u24';
+        u.textContent = (h.up24 * 100).toFixed(1) + '%';
+        li.appendChild(u);
+      }
+
+      ul.appendChild(li);
+    }
+
+    const ageSec = Math.round(Date.now() / 1000 - d.ts);
+    document.getElementById('host-age').textContent = ageSec + 's ago';
+    mark('hosts', ageSec > 90);
+  } catch (e) {
+    console.error('hosts:', e);
+    mark('hosts', true);
+  }
+}
+
+hosts();
+setInterval(hosts, 30 * 1000);
+
+function bps(n) {
+  if (n >= 1e9) return (n / 1e9).toFixed(1) + ' Gb/s';
+  if (n >= 1e6) return (n / 1e6).toFixed(1) + ' Mb/s';
+  if (n >= 1e3) return Math.round(n / 1e3) + ' kb/s';
+  return n + ' b/s';
+}
+
+async function wan() {
+  try {
+    const r = await fetch('/data/wan.json');
+    const d = await r.json();
+
+    document.getElementById('wan-rx').textContent = bps(d.rx_bps);
+    document.getElementById('wan-tx').textContent = bps(d.tx_bps);
+
+    const ageSec = Math.round(Date.now() / 1000 - d.ts);
+    document.getElementById('wan-age').textContent = ageSec + 's ago';
+    mark('wan', ageSec > 90);
+  } catch (e) {
+    console.error('wan:', e);
+    mark('wan', true);
+  }
+}
+
+wan();
+setInterval(wan, 30 * 1000);

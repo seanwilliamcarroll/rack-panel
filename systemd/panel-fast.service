@@ -4,4 +4,4 @@ Description=Rack panel fast collectors
 [Service]
 Type=oneshot
 User=sean
-ExecStart=/home/sean/rack-panel/collect/fast.sh
+ExecStart=/home/sean/rack-panel/collect/run-fast.sh
