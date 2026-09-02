@@ -1,4 +1,4 @@
-const LAT = CONFIG.LAT, LON = CONFIG.LON;
+const LAT = CONFIG.lat, LON = CONFIG.lon;
 
 async function weather() {
   const url = `https://api.open-meteo.com/v1/forecast`
