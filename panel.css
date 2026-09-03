@@ -85,3 +85,37 @@ body {
   flex: 0 0 auto;
 }
 #wan .big { font-size: 34px; }
+
+#flow-list { list-style: none; }
+#flow-list li {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 4px 6px;
+  margin-bottom: 2px;
+  font-size: 17px;
+}
+#flow-list .bar {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  background: var(--ok);
+  opacity: 0.15;
+  border-radius: 3px;
+}
+#flow-list .fname {
+  position: relative;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+#flow-list .fio {
+  position: relative;
+  margin-left: auto;
+  padding-left: 12px;
+  color: var(--dim);
+  font-size: 15px;
+  flex: 0 0 auto;
+  white-space: nowrap;
+}

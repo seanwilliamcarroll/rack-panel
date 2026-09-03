@@ -161,3 +161,54 @@ async function wan() {
 
 wan();
 setInterval(wan, 30 * 1000);
+
+function bytes(n) {
+  if (n >= 1e9) return (n / 1e9).toFixed(1) + ' GB';
+  if (n >= 1e6) return (n / 1e6).toFixed(1) + ' MB';
+  if (n >= 1e3) return Math.round(n / 1e3) + ' kB';
+  return n + ' B';
+}
+
+async function flows() {
+  try {
+    const r = await fetch('/data/flows.json');
+    const d = await r.json();
+
+    const ul = document.getElementById('flow-list');
+    ul.innerHTML = '';
+
+    const max = Math.max(...d.hosts.map(h => h.total), 1);
+
+    for (const h of d.hosts) {
+      const li = document.createElement('li');
+
+      const bar = document.createElement('div');
+      bar.className = 'bar';
+      bar.style.width = (h.total / max * 100) + '%';
+      li.appendChild(bar);
+
+      const name = document.createElement('span');
+      name.className = 'fname';
+      name.textContent = h.name;
+      name.title = h.addr;
+      li.appendChild(name);
+
+      const io = document.createElement('span');
+      io.className = 'fio';
+      io.textContent = '\u2191 ' + bytes(h.tx) + '  \u2193 ' + bytes(h.rx);
+      li.appendChild(io);
+
+      ul.appendChild(li);
+    }
+
+    const ageSec = Math.round(Date.now() / 1000 - d.ts);
+    document.getElementById('flow-age').textContent = ageSec + 's ago';
+    mark('flows', ageSec > 900);
+  } catch (e) {
+    console.error('flows:', e);
+    mark('flows', true);
+  }
+}
+
+flows();
+setInterval(flows, 5 * 60 * 1000);
