@@ -212,3 +212,33 @@ async function flows() {
 
 flows();
 setInterval(flows, 5 * 60 * 1000);
+
+
+async function adguard() {
+  try {
+    const r = await fetch('/data/adguard.json');
+    const d = await r.json();
+
+    const pct = d.queries ? Math.round(d.blocked / d.queries * 100) : 0;
+    document.getElementById('ag-pct').textContent = pct + '%';
+    document.getElementById('ag-sub').textContent =
+      d.queries.toLocaleString() + ' queries \u00B7 '
+      + d.blocked.toLocaleString() + ' blocked';
+
+    // Label the window from the data, not a hardcoded string.
+    const span = d.series.length + (d.units === 'hours' ? 'h' : 'd');
+    document.querySelector('#adguard h2').textContent = 'DNS \u00B7 ' + span;
+
+    spark('ag-line', d.series);
+
+    const ageSec = Math.round(Date.now() / 1000 - d.ts);
+    document.getElementById('ag-age').textContent = ageSec + 's ago';
+    mark('adguard', ageSec > 900);
+  } catch (e) {
+    console.error('adguard:', e);
+    mark('adguard', true);
+  }
+}
+
+adguard();
+setInterval(adguard, 5 * 60 * 1000);
